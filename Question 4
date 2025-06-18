@@ -1,0 +1,36 @@
+import cv2
+import numpy as np
+
+# Read the color image (in BGR format)
+image = cv2.imread('image.jpg')
+
+# 1. Display image size and pixel values
+print("Image size (height, width, channels):", image.shape)
+print("\nPixel values (BGR format) at position (0,0):", image[0, 0])
+print("Pixel values (BGR format) at position (50,100):", image[50, 100])
+
+# 2. Manual BGR to Grayscale conversion function
+def manual_grayscale(bgr_img):
+    # Extract channels (OpenCV uses BGR order)
+    b = bgr_img[:, :, 0].astype(float)
+    g = bgr_img[:, :, 1].astype(float)
+    r = bgr_img[:, :, 2].astype(float)
+    
+    # Apply grayscale formula
+    gray = 0.299 * r + 0.587 * g + 0.114 * b
+    return gray.astype(np.uint8)
+
+# Convert and display
+gray_manual = manual_grayscale(image)
+cv2.imshow('Manual Grayscale', gray_manual)
+cv2.waitKey(0)
+
+# 3. Count pure white pixels ([255, 255, 255] in BGR)
+white_pixels = np.sum(np.all(image == [255, 255, 255], axis=2))
+print("\nNumber of pure white pixels:", white_pixels)
+
+# Compare with OpenCV's built-in function for verification
+gray_cv2 = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+cv2.imshow('OpenCV Grayscale', gray_cv2)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
