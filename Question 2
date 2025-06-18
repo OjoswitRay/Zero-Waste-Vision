@@ -1,0 +1,41 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate 20x20 array with random integers between 0-255
+arr = np.random.randint(0, 256, (20, 20))
+
+# 1. Calculate and print max, min, and median for rows and columns
+print("Row statistics:")
+print("Max:", np.max(arr, axis=1))
+print("Min:", np.min(arr, axis=1))
+print("Median:", np.median(arr, axis=1))
+
+print("\nColumn statistics:")
+print("Max:", np.max(arr, axis=0))
+print("Min:", np.min(arr, axis=0))
+print("Median:", np.median(arr, axis=0))
+
+# 2. Resize to 200x200 using nearest neighbor interpolation
+resized = np.repeat(np.repeat(arr, 10, axis=0), 10, axis=1)
+
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.title("Original 20x20")
+plt.imshow(arr, cmap='gray', vmin=0, vmax=255)
+plt.subplot(1, 2, 2)
+plt.title("Resized 200x200")
+plt.imshow(resized, cmap='gray', vmin=0, vmax=255)
+plt.show()
+
+# 3. Create gradient images
+horizontal_gradient = np.tile(np.linspace(0, 255, 256), (256, 1)).astype(np.uint8)
+vertical_gradient = np.tile(np.linspace(0, 255, 256), (256, 1)).T.astype(np.uint8)
+
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.title("Horizontal Gradient")
+plt.imshow(horizontal_gradient, cmap='gray')
+plt.subplot(1, 2, 2)
+plt.title("Vertical Gradient")
+plt.imshow(vertical_gradient, cmap='gray')
+plt.show()
