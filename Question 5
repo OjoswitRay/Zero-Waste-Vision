@@ -1,0 +1,36 @@
+import cv2
+import numpy as np
+
+# Read the color image
+color_img = cv2.imread('image.jpg')
+
+# 1. Convert to grayscale and apply Gaussian blur
+gray_img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
+blurred_img = cv2.GaussianBlur(gray_img, (9, 9), 0)
+
+cv2.imshow('Grayscale Image', gray_img)
+cv2.imshow('Blurred Image', blurred_img)
+cv2.waitKey(0)
+
+# 2. Create white image and subtract blurred image
+white_img = np.ones_like(blurred_img) * 255
+subtracted_img = white_img - blurred_img
+
+cv2.imshow('Subtracted Image', subtracted_img)
+cv2.waitKey(0)
+
+# 3. Create blank image and draw shapes
+blank_img = np.zeros((512, 512, 3), dtype=np.uint8)
+
+# Draw blue rectangle
+cv2.rectangle(blank_img, (50, 50), (462, 462), (255, 0, 0), 3)
+
+# Draw filled green circle
+cv2.circle(blank_img, (300, 300), 50, (0, 255, 0), -1)
+
+# Draw red diagonal line
+cv2.line(blank_img, (512, 0), (0, 512), (0, 0, 255), 2)
+
+cv2.imshow('Shapes Drawing', blank_img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
