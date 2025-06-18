@@ -1,0 +1,44 @@
+import numpy as np
+
+# 1. Create 15x15 array with random integers between 0-255
+arr = np.random.randint(0, 256, (15, 15))
+
+# Apply threshold (elements < 120 set to 0)
+threshold_arr = np.where(arr < 120, 0, arr)
+
+# 2. Boundary transversal function
+def boundary_transversal(matrix):
+    rows, cols = matrix.shape
+    if rows == 0 or cols == 0:
+        return
+    
+    # Top row (left to right)
+    for i in range(cols):
+        print(matrix[0, i], end=' ')
+    
+    # Right column (top to bottom, skipping first)
+    for i in range(1, rows):
+        print(matrix[i, cols-1], end=' ')
+    
+    # Bottom row (right to left, if more than one row)
+    if rows > 1:
+        for i in range(cols-2, -1, -1):
+            print(matrix[rows-1, i], end=' ')
+    
+    # Left column (bottom to top, if more than one column)
+    if cols > 1:
+        for i in range(rows-2, 0, -1):
+            print(matrix[i, 0], end=' ')
+
+# 3. Replace odd elements with 0, even with 1
+odd_even_arr = np.where(arr % 2 == 0, 1, 0)
+
+# Print results
+print("Original array:")
+print(arr)
+print("\nThreshold array (elements < 120 set to 0):")
+print(threshold_arr)
+print("\nBoundary elements:")
+boundary_transversal(arr)
+print("\n\nOdd-even replaced array (even=1, odd=0):")
+print(odd_even_arr)
