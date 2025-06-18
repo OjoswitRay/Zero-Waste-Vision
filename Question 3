@@ -1,45 +1,59 @@
-import pandas as pd
+import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Create the DataFrame
-data = {
-    'Name': [f'Student_{i}' for i in range(1, 11)],
-    'Subject': np.random.choice(['Math', 'Science', 'History', 'English'], 10),
-    'Score': np.random.randint(50, 101, 10),
-    'Grade': ''
-}
+# 1. Read image in grayscale and invert it
+gray_img = cv2.imread('image.jpg', cv2.IMREAD_GRAYSCALE)
+inverted_img = 255 - gray_img
 
-df = pd.DataFrame(data)
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.title('Original Grayscale')
+plt.imshow(gray_img, cmap='gray')
+plt.subplot(1, 2, 2)
+plt.title('Inverted Image')
+plt.imshow(inverted_img, cmap='gray')
+plt.show()
 
-# Assign grades based on scores
-def assign_grade(score):
-    if score >= 90:
-        return 'A'
-    elif score >= 80:
-        return 'B'
-    elif score >= 70:
-        return 'C'
-    elif score >= 60:
-        return 'D'
-    else:
-        return 'F'
+# 2. Color image operations (split channels, zero red, merge)
+color_img = cv2.imread('image.jpg')
+color_img = cv2.cvtColor(color_img, cv2.COLOR_BGR2RGB)  # Convert to RGB
 
-df['Grade'] = df['Score'].apply(assign_grade)
+# Split channels
+r, g, b = cv2.split(color_img)
+# Zero out red channel
+r[:] = 0
+# Merge channels
+no_red_img = cv2.merge([r, g, b])
 
-# Print sorted by Score (descending)
-print("DataFrame sorted by Score (descending):")
-print(df.sort_values('Score', ascending=False))
-print("\n")
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.title('Original Color')
+plt.imshow(color_img)
+plt.subplot(1, 2, 2)
+plt.title('Red Channel Zeroed')
+plt.imshow(no_red_img)
+plt.show()
 
-# Calculate average score per subject
-print("Average score per subject:")
-print(df.groupby('Subject')['Score'].mean())
-print("\n")
+# 3. Flipping operations
+# Horizontal flip
+h_flip = cv2.flip(color_img, 1)
+# Vertical flip
+v_flip = cv2.flip(color_img, 0)
+# Mirror (same as horizontal flip for 2D matrix)
+mirror_img = color_img[:, ::-1]
 
-# Filter function for A/B grades
-def pandas_filter_pass(dataframe):
-    return dataframe[dataframe['Grade'].isin(['A', 'B'])]
+plt.figure(figsize=(15, 5))
+plt.subplot(1, 3, 1)
+plt.title('Horizontal Flip')
+plt.imshow(h_flip)
+plt.subplot(1, 3, 2)
+plt.title('Vertical Flip')
+plt.imshow(v_flip)
+plt.subplot(1, 3, 3)
+plt.title('Mirror Image')
+plt.imshow(mirror_img)
+plt.show()
 
-# Display passing students
-print("Students with A or B grades:")
-print(pandas_filter_pass(df))
+# Verify if mirror equals horizontal flip
+print("Is mirror same as horizontal flip?", np.array_equal(h_flip, mirror_img))
